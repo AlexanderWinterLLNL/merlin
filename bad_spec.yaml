@@ -1,0 +1,25 @@
+description:
+    name: hi
+    description: hi
+
+merlin:
+    resources:
+        workers:
+            merge_posthoc_workers:
+                args: -l INFO --concurrency 36 --prefetch-multiplier 1 -Ofair
+                steps: [merge_posthoc]
+                batch:
+                  type: slurm
+
+
+study:
+    - name: setup
+      description: 
+      run:
+          cmd: echo "hi"
+
+    - name: merge_posthoc
+      description: Combines the outputs of the previous step
+      run:
+          cmd: |
+          depends: [setup]
