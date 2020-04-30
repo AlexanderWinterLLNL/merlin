@@ -5,21 +5,20 @@ description:
 merlin:
     resources:
         workers:
-            merge_posthoc_workers:
+            step2_workers:
                 args: -l INFO --concurrency 36 --prefetch-multiplier 1 -Ofair
-                steps: [merge_posthoc]
-                batch:
-                  type: slurm
-
+                steps: [step2]
 
 study:
     - name: setup
       description: 
       run:
           cmd: echo "hi"
+          task_queue: q1
 
-    - name: merge_posthoc
+    - name: step2
       description: Combines the outputs of the previous step
       run:
-          cmd: |
+          cmd: echo "hi2" 
           depends: [setup]
+          task_queue: q2

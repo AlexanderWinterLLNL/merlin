@@ -398,8 +398,14 @@ class MerlinStudy:
         """
         environment = self.expanded_spec.get_study_environment()
         steps = self.expanded_spec.get_study_steps()
-
         parameters = self.expanded_spec.get_parameters()
+
+        # check for steps w/out assigned worker
+        for worker in self.expanded_spec.merlin["resources"]["workers"]:
+            for i in worker["steps"]:
+                if i == "all":
+                    break
+        
 
         # Setup the study.
         study = Study(
