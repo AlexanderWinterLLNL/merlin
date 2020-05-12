@@ -17,7 +17,9 @@ echo "Starting new run: $SLURM_JOBID"
 date
 
 # run program
-time merlin run ${YAML_FILE} --vars N_SAMPLES=$1 CONC=$2
-merlin run-workers ${YAML_FILE} --vars N_SAMPLES=$1 CONC=$2
+while :
+do
+    time merlin run ${YAML_FILE} --vars N_SAMPLES=$1 CONC=$2
+    merlin purge -f ${YAML_FILE} --vars N_SAMPLES=$1 CONC=$2
+done
 
-merlin monitor
