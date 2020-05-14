@@ -10,8 +10,7 @@
 #SBATCH --exclusive
 #SBATCH --mpibind=off
 
-YAML_DIR=/g/g13/bay1/merlin/merlin/examples/workflows/null_spec
-YAML_FILE=${YAML_DIR}/null_spec.yaml
+YAML_FILE=spec.yaml
 
 # print message that a new run is starting
 echo "Starting new run: $SLURM_JOBID"

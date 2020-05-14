@@ -30,9 +30,9 @@ for i, concurrency in enumerate(concurrencies):
             os.mkdir(s_name)
         os.chdir(s_name)
         submit = f"submit_{nodes[i]}_node.sbatch"
-        command = f"sbatch {submit} {sample} {int(concurrency/nodes[i])}"
+        command = f"sbatch --jobname={run_id}{os.path.basename(args.spec_path)} {submit} {sample} {int(concurrency/nodes[i])}"
         shutil.copyfile(os.path.join(submit_path, submit), submit)
-        shutil.copyfile(args.spec_path, os.path.basename(args.spec_path))
+        shutil.copyfile(args.spec_path, "spec.yaml")
         os.mkdir("scripts")
         shutil.copyfile(args.script_path, os.path.join("scripts", "make_samples.py"))
         lines = subprocess.check_output(command, shell=True).decode("ascii")

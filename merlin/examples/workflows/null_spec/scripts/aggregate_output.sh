@@ -1,8 +1,8 @@
 
-runs=( 25 )
+runs=( 26 )
 concurrencies=(1 2 4 8 16 32 64)
-samples=(100000)
-#samples=(1 10 100 1000 10000)
+#samples=(100000)
+samples=(1 10 100 1000 10000)
 
 for run in "${runs[@]}"
     do
