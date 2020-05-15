@@ -1,5 +1,5 @@
 
-runs=( 30 )
+runs=( 31 )
 concurrencies=(1 2 4 8 16 32 64)
 samples=(1 10 100 1000 10000)
 
@@ -14,7 +14,8 @@ for run in "${runs[@]}"
         for s in "${samples[@]}"
             do
             echo "c${c}_s${s} : " >> ${DATA}
-            python3 read_output.py ${read_path}/c_$c/s_$s/*.log ${read_path}/c_$c/s_$s/*.err $c $s >> ${DATA}
+            wf_path="${read_path}/c_$c/s_$s"
+            python3 read_output.py ${wf_path}/ $c $s >> ${DATA}
             done
         done
     perl -pi -e 's/ : \n/ : /g' ${DATA}
