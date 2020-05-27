@@ -68,9 +68,9 @@ def start_verify_time():
             all_timestamps.append(timestamp)
         except:
             continue
-    earliest = min(all_timestamps)
     try:
-        print(f"c{args.c}_s{args.s} start verify : " + str(earliest)
+        earliest = min(all_timestamps)
+        print(f"c{args.c}_s{args.s} start verify : " + str(earliest))
     except BaseException:
         print(f"c{args.c}_s{args.s} start verify : ERROR")
 
