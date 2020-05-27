@@ -16,12 +16,9 @@ YAML_FILE=spec.yaml
 echo "Starting new run: $SLURM_JOBID"
 date
 
-#merlin stop-workers ;
-#merlin purge ${YAML_FILE} -f ;
-
 # run program
-time merlin run ${YAML_FILE} --vars N_SAMPLES=$1 CONC=$2
-merlin run-workers ${YAML_FILE} --echo --vars N_SAMPLES=$1 CONC=$2
-merlin run-workers ${YAML_FILE} --vars N_SAMPLES=$1 CONC=$2
+time merlin run ${YAML_FILE} --vars N_SAMPLES=$1 CONC=$2 RUN_ID=$3
+merlin run-workers ${YAML_FILE} --echo --vars N_SAMPLES=$1 CONC=$2 RUN_ID=$3
+merlin run-workers ${YAML_FILE} --vars N_SAMPLES=$1 CONC=$2 RUN_ID=$3
 
 merlin monitor
