@@ -1,13 +1,14 @@
-import subprocess
 import os
 import shutil
+import subprocess
+
 
 submit_path = "/g/g13/bay1/merlin/merlin/examples/workflows/null_spec"
-concurrencies = [1,2,4,8,16,32,64]
-nodes =         [1,1,1,1, 1, 1, 2]
-samples = [1,10,100,1000,10000]
+concurrencies = [1, 2, 4, 8, 16, 32, 64]
+nodes = [1, 1, 1, 1, 1, 1, 2]
+samples = [1, 10, 100, 1000, 10000]
 output_path = "/g/g13/bay1/null_results/run_3"
-#output_path = "/g/g13/bay1/merlin/merlin/examples/workflows/null_spec"
+# output_path = "/g/g13/bay1/merlin/merlin/examples/workflows/null_spec"
 for i, concurrency in enumerate(concurrencies):
     c_name = os.path.join(output_path, f"c_{concurrency}")
     if not os.path.isdir(c_name):
@@ -21,7 +22,6 @@ for i, concurrency in enumerate(concurrencies):
         submit = f"submit{nodes[i]}.sbatch"
         command = f"sbatch {submit} {sample} {int(concurrency/nodes[i])}"
         shutil.copyfile(os.path.join(submit_path, submit), submit)
-        lines = subprocess.check_output(command, shell=True).decode('ascii')
+        lines = subprocess.check_output(command, shell=True).decode("ascii")
         os.chdir(f"..")
     os.chdir(f"..")
-

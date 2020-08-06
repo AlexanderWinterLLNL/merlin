@@ -1,14 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import colors
 import yaml
+from matplotlib import colors
 
-with open('my_data.yaml') as f:
+
+with open("my_data.yaml") as f:
     data = yaml.safe_load(f)
 
 
-c = [1,2,4,8,16,32]
-samples = [1,10,100,1000,10000]
+c = [1, 2, 4, 8, 16, 32]
+samples = [1, 10, 100, 1000, 10000]
 fig, ax = plt.subplots()
 
 for con in c:
@@ -24,8 +25,7 @@ for con in c:
 plt.xscale("log")
 ax.legend()
 
-ax.set(xlabel='n of samples', ylabel='tasks per minute',
-               title='Task speed')
+ax.set(xlabel="n of samples", ylabel="tasks per minute", title="Task speed")
 ax.grid()
 
 fig.savefig("task_speed.png")
