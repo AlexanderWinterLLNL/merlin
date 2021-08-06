@@ -35,6 +35,7 @@ import getpass
 import logging
 import os
 from os.path import expanduser
+from typing import Union
 
 from merlin.config.configfile import CONFIG, get_ssl_entries
 
@@ -239,7 +240,7 @@ def _sort_valid_broker(broker, config_path, include_password):
     return get_redis_connection(config_path, include_password, ssl=True)
 
 
-def get_ssl_config():
+def get_ssl_config() -> Union[bool, str]:
     """
     Return the ssl config based on the configuration specified in the
     `app.yaml` config file.

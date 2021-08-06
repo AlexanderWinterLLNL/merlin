@@ -111,7 +111,7 @@ def load_default_user_names(config):
         config["broker"]["vhost"] = vhost
 
 
-def get_config(path):
+def get_config(path: Optional[str]) -> Dict:
     """
     Load a merlin configuration file and return a dictionary of the
     configurations.
@@ -301,5 +301,5 @@ def merge_sslmap(server_ssl: Dict[str, Union[str, ssl.VerifyMode]],
     server_ssl = new_server_ssl
 
 
-app_config = get_config(None)
-CONFIG = Config(app_config)
+app_config: Dict = get_config(None)
+CONFIG: Config = Config(app_config)

@@ -44,6 +44,9 @@ include config.mk
 .PHONY : tests
 .PHONY : fix-style
 .PHONY : check-style
+.PHONY : check-flake8
+.PHONY : check-pylint
+.PHONY : check-black
 .PHONY : check-camel-case
 .PHONY : checks
 .PHONY : reqlist
@@ -148,10 +151,21 @@ fix-style:
 
 
 # run code style checks
-check-style:
+check-style: check-flake check-pylint check-black
+
+
+check-pylint:
+	-$(PYTHON) -m pylint merlin
+	-$(PYTHON) -m pylint tests
+
+
+check-black:
+	-black --check --target-version py36 $(MRLN)
+
+
+check-flake8:
 	-$(PYTHON) -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
 	-$(PYTHON) -m flake8 . --count --max-complexity=15 --statistics --max-line-length=127
-	-black --check --target-version py36 $(MRLN)
 
 
 # finds all strings in project that begin with a lowercase letter,

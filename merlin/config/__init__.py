@@ -32,6 +32,8 @@
 Used to store the application configuration.
 """
 
+from typing import Optional
+
 from merlin.utils import nested_dict_to_namespaces
 
 
@@ -43,6 +45,8 @@ class Config:
     """
 
     def __init__(self, app_dict):
+        self.broker: Optional[str]
+        self.celery: Any
         self.load_app(app_dict)
 
     def load_namespaces(self, dic, fields):
@@ -55,7 +59,7 @@ class Config:
             except KeyError:
                 pass
 
-    def load_app(self, dic):
+    def load_app(self, dic: Dict):
         """
         Makes the application dictionary into a namespace.
         """
