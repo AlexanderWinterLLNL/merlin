@@ -32,7 +32,7 @@
 Used to store the application configuration.
 """
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from merlin.utils import nested_dict_to_namespaces
 

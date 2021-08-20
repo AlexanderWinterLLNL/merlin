@@ -151,12 +151,17 @@ fix-style:
 
 
 # run code style checks
-check-style: check-flake check-pylint check-black
+check-style: check-flake8 check-pylint check-black
 
 
 check-pylint:
-	-$(PYTHON) -m pylint merlin
-	-$(PYTHON) -m pylint tests
+	( \
+	   . $(VENV)/bin/activate; \
+	   echo "PyLinting merlin source"; \
+	   $(PYTHON) -m pylint merlin; \
+	   echo "PyLinting merlin tests"; \
+	   $(PYTHON) -m pylint tests; \
+	)
 
 
 check-black:
@@ -164,8 +169,13 @@ check-black:
 
 
 check-flake8:
-	-$(PYTHON) -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
-	-$(PYTHON) -m flake8 . --count --max-complexity=15 --statistics --max-line-length=127
+	( \
+	   . $(VENV)/bin/activate; \
+	   echo "Running error flake8 lint"; \
+	   $(PYTHON) -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics; \
+	   echo "Running style flake8 lint"; \
+	   $(PYTHON) -m flake8 . --count --max-complexity=15 --statistics --max-line-length=127; \
+	)
 
 
 # finds all strings in project that begin with a lowercase letter,
