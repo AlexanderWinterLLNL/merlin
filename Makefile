@@ -158,7 +158,7 @@ check-pylint:
 	( \
 	   . $(VENV)/bin/activate; \
 	   echo "PyLinting merlin source"; \
-	   $(PYTHON) -m pylint merlin; \
+	   $(PYTHON) -m pylint merlin --ignore-patterns="$(VENV)/" --disable=logging-fstring-interpolation; \
 	   echo "PyLinting merlin tests"; \
 	   $(PYTHON) -m pylint tests; \
 	)
