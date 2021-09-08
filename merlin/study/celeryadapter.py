@@ -6,7 +6,7 @@
 #
 # LLNL-CODE-797170
 # All rights reserved.
-# This file is part of Merlin, Version: 1.8.0.
+# This file is part of Merlin, Version: 1.8.1.
 #
 # For details, see https://github.com/LLNL/merlin.
 #
@@ -245,11 +245,7 @@ def start_celery_workers(spec, steps, celery_args, just_return_command):
         # Add a per worker log file (debug)
         if LOG.isEnabledFor(logging.DEBUG):
             LOG.debug("Redirecting worker output to individual log files")
-            # The linter pointed out this f string currently does nothing, but
-            # this looks like this was swapped between % formatting and f-strings.
-            # Current implementation will just print '%p.%i', if that is not intended
-            # it needs to be updated. Currently skipping linter examination.
-            worker_args += f" --logfile %p.%i"  # noqa: F541
+            worker_args += " --logfile %p.%i"
 
         # Get the celery command
         celery_com = launch_celery_workers(
@@ -403,7 +399,7 @@ def purge_celery_tasks(queues, force):
         force_com = " -f "
     purge_command = " ".join(["celery -A merlin purge", force_com, "-Q", queues])
     LOG.debug(purge_command)
-    return subprocess.call(purge_command.split())
+    return subprocess.run(purge_command, shell=True).returncode
 
 
 def stop_celery_workers(queues=None, spec_worker_names=None, worker_regex=None):
