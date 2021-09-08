@@ -101,14 +101,14 @@ tests: unit-tests e2e-tests
 check-flake8:
 	. $(VENV)/bin/activate; \
 	echo "Flake8 linting for invalid source (bad syntax, undefined variables)..."; \
-	-$(PYTHON) -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics; \
+	$(PYTHON) -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics; \
 	echo "Flake8 linting failure for CI..."; \
-	-$(PYTHON) -m flake8 . --count --max-complexity=15 --statistics --max-line-length=127; \
+	$(PYTHON) -m flake8 . --count --max-complexity=15 --statistics --max-line-length=127; \
 
 
 check-black:
 	. $(VENV)/bin/activate; \
-	-black --check --target-version py36 $(MRLN); \
+	black --check --target-version py36 $(MRLN); \
 
 
 check-pylint:

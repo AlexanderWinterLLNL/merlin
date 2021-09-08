@@ -64,7 +64,9 @@ try:
     LOG.debug("broker_ssl = %s", broker_ssl)
     RESULTS_BACKEND_URI = results_backend.get_connection_string()
     results_ssl = results_backend.get_ssl_config(celery_check=True)
-    LOG.debug("results: %s", results_backend.get_connection_string(include_password=False))
+    LOG.debug(
+        "results: %s", results_backend.get_connection_string(include_password=False)
+    )
     LOG.debug("results: redis_backed_use_ssl = %s", results_ssl)
 except ValueError:
     # These variables won't be set if running with '--local'.
@@ -72,7 +74,7 @@ except ValueError:
     RESULTS_BACKEND_URI = None
 
 # initialize app with essential properties
-app: celery.app.base.Celery = Celery(
+app: Celery = Celery(
     "merlin",
     broker=BROKER_URI,
     backend=RESULTS_BACKEND_URI,
@@ -114,7 +116,10 @@ else:
         if i != len(override_dict) - 1:
             override_str += "\n"
         i += 1
-    LOG.info("Overriding default celery config with 'celery.override' in 'app.yaml':\n%s", override_str)
+    LOG.info(
+        "Overriding default celery config with 'celery.override' in 'app.yaml':\n%s",
+        override_str,
+    )
     app.conf.update(**override_dict)
 
 # auto-discover tasks

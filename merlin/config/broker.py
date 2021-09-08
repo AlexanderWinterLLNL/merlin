@@ -34,8 +34,9 @@ from __future__ import print_function
 import getpass
 import logging
 import os
+import ssl
 from os.path import expanduser
-from typing import Union
+from typing import Dict, List, Optional, Union
 
 from merlin.config.configfile import CONFIG, get_ssl_entries
 
@@ -265,7 +266,9 @@ def get_ssl_config() -> Union[bool, str]:
     except AttributeError:
         certs_path = None
 
-    broker_ssl: Dict[str, Union[str, ssl.VerifyMode]] = get_ssl_entries("Broker", broker, CONFIG.broker, certs_path)
+    broker_ssl: Dict[str, Union[str, ssl.VerifyMode]] = get_ssl_entries(
+        "Broker", broker, CONFIG.broker, certs_path
+    )
 
     if not broker_ssl:
         broker_ssl = True
