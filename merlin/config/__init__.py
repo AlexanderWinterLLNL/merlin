@@ -32,12 +32,10 @@
 Used to store the application configuration.
 """
 
-from typing import Dict, List, Optional
 from types import SimpleNamespace
+from typing import Dict, List, Optional
 
 from merlin.utils import nested_dict_to_namespaces
-
-import celery
 
 
 class Config:
@@ -62,6 +60,6 @@ class Config:
         fields: List[str] = ["celery", "broker", "results_backend"]
         for field in fields:
             try:
-                setattr(self, field, nested_dict_to_namespaces(app_dic[field]))
+                setattr(self, field, nested_dict_to_namespaces(app_dict[field]))
             except KeyError:
                 pass

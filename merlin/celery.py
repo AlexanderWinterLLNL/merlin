@@ -100,9 +100,9 @@ app.conf.update(**celeryconfig.DICT)
 
 # load config overrides from app.yaml
 if (
-        not hasattr(CONFIG.celery, "override")
-        or (CONFIG.celery.override is None)
-        or (not nested_namespace_to_dicts(CONFIG.celery.override))  # only true if len == 0
+    not hasattr(CONFIG.celery, "override")
+    or (CONFIG.celery.override is None)
+    or (not nested_namespace_to_dicts(CONFIG.celery.override))  # only true if len == 0
 ):
     LOG.debug("Skipping celery config override; 'celery.override' field is empty.")
 else:
