@@ -33,6 +33,7 @@ from __future__ import absolute_import, print_function
 
 import logging
 import os
+from typing import Dict, Optional, Union
 
 import billiard
 import psutil
@@ -47,39 +48,41 @@ from merlin.router import route_for_task
 from merlin.utils import nested_namespace_to_dicts
 
 
-LOG = logging.getLogger(__name__)
+LOG: logging.Logger = logging.getLogger(__name__)
 
 merlin.common.security.encrypt_backend_traffic.set_backend_funcs()
 
 
-BROKER_SSL: bool = True
-RESULTS_SSL: bool = False
+broker_ssl: bool = True
+results_ssl: bool = False
+BROKER_URI: Optional[str] = ""
+RESULTS_BACKEND_URI: Optional[str] = ""
 try:
     BROKER_URI = broker.get_connection_string()
     LOG.debug("broker: %s", broker.get_connection_string(include_password=False))
-    BROKER_SSL = broker.get_ssl_config()
-    LOG.debug("broker_ssl = %s", BROKER_SSL)
+    broker_ssl = broker.get_ssl_config()
+    LOG.debug("broker_ssl = %s", broker_ssl)
     RESULTS_BACKEND_URI = results_backend.get_connection_string()
-    RESULTS_SSL = results_backend.get_ssl_config(celery_check=True)
+    results_ssl = results_backend.get_ssl_config(celery_check=True)
     LOG.debug("results: %s", results_backend.get_connection_string(include_password=False))
-    LOG.debug("results: redis_backed_use_ssl = %s", RESULTS_SSL)
+    LOG.debug("results: redis_backed_use_ssl = %s", results_ssl)
 except ValueError:
     # These variables won't be set if running with '--local'.
     BROKER_URI = None
     RESULTS_BACKEND_URI = None
 
 # initialize app with essential properties
-app = Celery(
+app: celery.app.base.Celery = Celery(
     "merlin",
     broker=BROKER_URI,
     backend=RESULTS_BACKEND_URI,
-    broker_use_ssl=BROKER_SSL,
-    redis_backend_use_ssl=RESULTS_SSL,
+    broker_use_ssl=broker_ssl,
+    redis_backend_use_ssl=results_ssl,
     task_routes=(route_for_task,),
 )
 
 # set task priority defaults to prioritize workflow tasks over task-expansion tasks
-task_priority_defaults = {
+task_priority_defaults: Dict[str, Union[int, Priority]] = {
     "task_queue_max_priority": 10,
     "task_default_priority": get_priority(Priority.mid),
 }
@@ -101,17 +104,17 @@ if (
 ):
     LOG.debug("Skipping celery config override; 'celery.override' field is empty.")
 else:
-    override_dict = nested_namespace_to_dicts(CONFIG.celery.override)
-    OVERRIDE_STR: str = ""
-    i = 0
+    override_dict: Dict = nested_namespace_to_dicts(CONFIG.celery.override)
+    override_str: str = ""
+    i: int = 0
     for k, v in override_dict.items():
         if k not in str(app.conf.__dict__):
             raise ValueError(f"'{k}' is not a celery configuration.")
-        OVERRIDE_STR += f"\t{k}:\t{v}"
+        override_str += f"\t{k}:\t{v}"
         if i != len(override_dict) - 1:
-            OVERRIDE_STR += "\n"
+            override_str += "\n"
         i += 1
-    LOG.info("Overriding default celery config with 'celery.override' in 'app.yaml':\n%s", OVERRIDE_STR)
+    LOG.info("Overriding default celery config with 'celery.override' in 'app.yaml':\n%s", override_str)
     app.conf.update(**override_dict)
 
 # auto-discover tasks
@@ -136,6 +139,6 @@ def setup(**kwargs):
         # pylint is upset that billiard doesn't have a current_process() method - it does
         # pylint: disable=W0212, E1101
         current: billiard.process._MainProcess = billiard.current_process()
-        prefork_id = current._identity[0] - 1  # range 0:nworkers-1
-        cpu_slot = (prefork_id * cpu_skip) % npu
+        prefork_id: int = current._identity[0] - 1  # range 0:nworkers-1
+        cpu_slot: int = (prefork_id * cpu_skip) % npu
         process.cpu_affinity(list(range(cpu_slot, cpu_slot + cpu_skip)))

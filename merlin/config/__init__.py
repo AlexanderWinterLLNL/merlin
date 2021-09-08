@@ -46,7 +46,7 @@ class Config:
 
     def __init__(self, app_dict):
         self.broker: Optional[str]
-        self.celery: Any
+        self.celery  # I don't know how this would be typed except as in celery.py as celery.app.base.Celery
         self.load_app(app_dict)
 
     def load_namespaces(self, dic, fields):

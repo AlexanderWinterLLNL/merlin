@@ -46,12 +46,12 @@ except ImportError:
     from urllib.parse import quote
 
 
-LOG = logging.getLogger(__name__)
+LOG: logging.Logger = logging.getLogger(__name__)
 
-BROKERS = ["rabbitmq", "redis", "rediss", "redis+socket", "amqps", "amqp"]
+BROKERS: List[str] = ["rabbitmq", "redis", "rediss", "redis+socket", "amqps", "amqp"]
 
-RABBITMQ_CONNECTION = "{conn}://{username}:{password}@{server}:{port}/{vhost}"
-REDISSOCK_CONNECTION = "redis+socket://{path}?virtual_host={db_num}"
+RABBITMQ_CONNECTION: str = "{conn}://{username}:{password}@{server}:{port}/{vhost}"
+REDISSOCK_CONNECTION: str = "redis+socket://{path}?virtual_host={db_num}"
 USER = getpass.getuser()
 
 
@@ -245,7 +245,7 @@ def get_ssl_config() -> Union[bool, str]:
     Return the ssl config based on the configuration specified in the
     `app.yaml` config file.
     """
-    broker = ""
+    broker: Union[bool, str] = ""
     try:
         broker = CONFIG.broker.url.split(":")[0]
     except AttributeError:
@@ -259,12 +259,13 @@ def get_ssl_config() -> Union[bool, str]:
     if broker not in BROKERS:
         return False
 
+    certs_path: Optional[str]
     try:
         certs_path = CONFIG.celery.certs
     except AttributeError:
         certs_path = None
 
-    broker_ssl = get_ssl_entries("Broker", broker, CONFIG.broker, certs_path)
+    broker_ssl: Dict[str, Union[str, ssl.VerifyMode]] = get_ssl_entries("Broker", broker, CONFIG.broker, certs_path)
 
     if not broker_ssl:
         broker_ssl = True
