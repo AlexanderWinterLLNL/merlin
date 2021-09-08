@@ -20,7 +20,7 @@
 # all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANnnTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
@@ -36,6 +36,8 @@ from typing import Dict, Optional
 
 from merlin.utils import nested_dict_to_namespaces
 
+import celery
+
 
 class Config:
     """
@@ -46,7 +48,8 @@ class Config:
 
     def __init__(self, app_dict):
         self.broker: Optional[str]
-        self.celery  # I don't know how this would be typed except as in celery.py as celery.app.base.Celery
+        # I don't know how this would be typed except as in celery.py as celery.app.base.Celery
+        self.celery: Optional[celery.app.base.Celery]
         self.load_app(app_dict)
 
     def load_namespaces(self, dic, fields):

@@ -53,21 +53,21 @@ LOG: logging.Logger = logging.getLogger(__name__)
 merlin.common.security.encrypt_backend_traffic.set_backend_funcs()
 
 
-broker_ssl: bool = True
-results_ssl: bool = False
+BROKER_SSL: bool = True
+RESULTS_SSL: bool = False
 BROKER_URI: Optional[str] = ""
 RESULTS_BACKEND_URI: Optional[str] = ""
 try:
     BROKER_URI = broker.get_connection_string()
     LOG.debug("broker: %s", broker.get_connection_string(include_password=False))
-    broker_ssl = broker.get_ssl_config()
-    LOG.debug("broker_ssl = %s", broker_ssl)
+    BROKER_SSL = broker.get_ssl_config()
+    LOG.debug("broker_ssl = %s", BROKER_SSL)
     RESULTS_BACKEND_URI = results_backend.get_connection_string()
-    results_ssl = results_backend.get_ssl_config(celery_check=True)
+    RESULTS_SSL = results_backend.get_ssl_config(celery_check=True)
     LOG.debug(
         "results: %s", results_backend.get_connection_string(include_password=False)
     )
-    LOG.debug("results: redis_backed_use_ssl = %s", results_ssl)
+    LOG.debug("results: redis_backed_use_ssl = %s", RESULTS_SSL)
 except ValueError:
     # These variables won't be set if running with '--local'.
     BROKER_URI = None
@@ -78,8 +78,8 @@ app: Celery = Celery(
     "merlin",
     broker=BROKER_URI,
     backend=RESULTS_BACKEND_URI,
-    broker_use_ssl=broker_ssl,
-    redis_backend_use_ssl=results_ssl,
+    broker_use_ssl=BROKER_SSL,
+    redis_backend_use_ssl=RESULTS_SSL,
     task_routes=(route_for_task,),
 )
 
@@ -100,9 +100,9 @@ app.conf.update(**celeryconfig.DICT)
 
 # load config overrides from app.yaml
 if (
-    (not hasattr(CONFIG.celery, "override"))
-    or (CONFIG.celery.override is None)
-    or (len(nested_namespace_to_dicts(CONFIG.celery.override)) == 0)
+        not hasattr(CONFIG.celery, "override")
+        or (CONFIG.celery.override is None)
+        or (not nested_namespace_to_dicts(CONFIG.celery.override))  # only true if len == 0
 ):
     LOG.debug("Skipping celery config override; 'celery.override' field is empty.")
 else:

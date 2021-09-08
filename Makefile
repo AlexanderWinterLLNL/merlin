@@ -32,7 +32,7 @@ include config.mk
 .PHONY : virtualenv
 .PHONY : install-merlin
 .PHONY : install-workflow-deps
-.PHONY : install-merlin-dev
+.PHONY : install-dev
 .PHONY : unit-tests
 .PHONY : e2e-tests
 .PHONY : tests
@@ -63,6 +63,7 @@ virtualenv:
 
 # install merlin into the virtual environment
 install-merlin: virtualenv
+	. $(VENV)/bin/activate; \
 	$(PIP) install -e .; \
 	merlin config; \
 
@@ -73,7 +74,7 @@ install-workflow-deps: virtualenv install-merlin
 
 
 # install requirements
-install-merlin-dev: virtualenv install-workflow-deps
+install-dev: virtualenv install-workflow-deps
 	$(PIP) install -r requirements/dev.txt; \
 
 
@@ -107,16 +108,15 @@ check-flake8:
 
 
 check-black:
-	. $(VENV)/bin/activate; \
-	black --check --target-version py36 $(MRLN); \
+	-black --check --target-version py36 $(MRLN); \
 
 
 check-pylint:
 	. $(VENV)/bin/activate; \
 	echo "PyLinting merlin source..."; \
-	$(PYTHON) -m pylint merlin --ignore-patterns="$(VENV)/" --disable=logging-fstring-interpolation; \
+	$(PYTHON) -m pylint merlin --rcfile=setup.cfg --ignore-patterns="$(VENV)/" --disable=logging-fstring-interpolation; \
 	echo "PyLinting merlin tests..."; \
-	$(PYTHON) -m pylint tests; \
+	$(PYTHON) -m pylint tests --rcfile=setup.cfg; \
 
 
 # run code style checks
