@@ -108,7 +108,8 @@ check-flake8:
 
 
 check-black:
-	-black --check --target-version py36 $(MRLN); \
+	. $(VENV)/bin/activate; \
+	$(PYTHON) -m black --check --target-version py36 $(MRLN); \
 
 
 check-pylint:
