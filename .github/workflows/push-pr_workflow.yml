@@ -43,9 +43,9 @@ jobs:
     - name: Lint with pylint
       run: |
       	# examine the source for merlin - currently does not fail CI
-        python3 -m pylint merlin --rcfile=setup.cfg --exit-zero
+        pylint merlin --rcfile=setup.cfg --exit-zero
       	# examine the tests for merlin - currently does not fail CI
-        python3 -m pylint tests --rcfile=setup.cfg --exit-zero
+        pylint tests --rcfile=setup.cfg --exit-zero
 
     - name: Run pytest over unit test suite
       run: |
