@@ -45,6 +45,7 @@ from argparse import (
     RawTextHelpFormatter,
 )
 from contextlib import suppress
+from typing import List, Optional
 
 from merlin import VERSION, display, router
 from merlin.ascii_art import banner_small
@@ -70,27 +71,27 @@ class HelpParser(ArgumentParser):
         sys.exit(2)
 
 
-def verify_filepath(filepath):
+def verify_filepath(filepath) -> str:
     """
     Verify that the filepath argument is a valid
     file.
 
     :param `filepath`: the path of a file
     """
-    filepath = os.path.abspath(os.path.expandvars(os.path.expanduser(filepath)))
+    filepath: str = os.path.abspath(os.path.expandvars(os.path.expanduser(filepath)))
     if not os.path.isfile(filepath):
         raise ValueError(f"'{filepath}' is not a valid filepath")
     return filepath
 
 
-def verify_dirpath(dirpath):
+def verify_dirpath(dirpath) -> str:
     """
     Verify that the dirpath argument is a valid
     directory.
 
     :param `dirpath`: the path of a directory
     """
-    dirpath = os.path.abspath(os.path.expandvars(os.path.expanduser(dirpath)))
+    dirpath: str = os.path.abspath(os.path.expandvars(os.path.expanduser(dirpath)))
     if not os.path.isdir(dirpath):
         raise ValueError(f"'{dirpath}' is not a valid directory path")
     return dirpath
@@ -194,10 +195,10 @@ def process_restart(args):
     :param `args`: parsed CLI arguments
     """
     print(banner_small)
-    restart_dir = verify_dirpath(args.restart_dir)
-    filepath = os.path.join(args.restart_dir, "merlin_info", "*.expanded.yaml")
-    possible_specs = glob.glob(filepath)
-    if len(possible_specs) == 0:
+    restart_dir: str = verify_dirpath(args.restart_dir)
+    filepath: str = os.path.join(args.restart_dir, "merlin_info", "*.expanded.yaml")
+    possible_specs: Optional[List[str]] = glob.glob(filepath)
+    if not possible_specs:  # len == 0
         raise ValueError(
             f"'{filepath}' does not match any provenance spec file to restart from."
         )
@@ -205,9 +206,9 @@ def process_restart(args):
         raise ValueError(
             f"'{filepath}' matches more than one provenance spec file to restart from."
         )
-    filepath = verify_filepath(possible_specs[0])
+    filepath: str = verify_filepath(possible_specs[0])
     LOG.info(f"Restarting workflow at '{restart_dir}'")
-    study = MerlinStudy(filepath, restart_dir=restart_dir)
+    study: MerlinStudy = MerlinStudy(filepath, restart_dir=restart_dir)
     router.run_task_server(study, args.run_mode)
 
 

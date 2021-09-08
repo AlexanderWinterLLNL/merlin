@@ -20,7 +20,7 @@
 # all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANnnTABILITY,
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
@@ -32,7 +32,8 @@
 Used to store the application configuration.
 """
 
-from typing import Dict, Optional
+from typing import Dict, List, Optional
+from types import SimpleNamespace
 
 from merlin.utils import nested_dict_to_namespaces
 
@@ -47,23 +48,20 @@ class Config:
     """
 
     def __init__(self, app_dict):
-        self.broker: Optional[str]
-        # I don't know how this would be typed except as in celery.py as celery.app.base.Celery
-        self.celery: Optional[celery.app.base.Celery]
-        self.load_app(app_dict)
+        # I think this ends up a SimpleNamespace from load_app_into_namespaces, but it seems like it should be typed as
+        # the app var in celery.py, as celery.app.base.Celery
+        self.celery: Optional[SimpleNamespace]
+        self.broker: Optional[SimpleNamespace]
+        self.results_backend: Optional[SimpleNamespace]
+        self.load_app_into_namespaces(app_dict)
 
-    def load_namespaces(self, dic, fields):
+    def load_app_into_namespaces(self, app_dict: Dict):
         """
-        TODO
+        Makes the application dictionary into a namespace, sets the attributes of the Config from the namespace values.
         """
+        fields: List[str] = ["celery", "broker", "results_backend"]
         for field in fields:
             try:
-                setattr(self, field, nested_dict_to_namespaces(dic[field]))
+                setattr(self, field, nested_dict_to_namespaces(app_dic[field]))
             except KeyError:
                 pass
-
-    def load_app(self, dic: Dict):
-        """
-        Makes the application dictionary into a namespace.
-        """
-        self.load_namespaces(dic, ["celery", "broker", "results_backend"])
