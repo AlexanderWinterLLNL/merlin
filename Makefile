@@ -155,8 +155,8 @@ fix-style:
 	$(PYTHON) -m isort $(TEST); \
 	$(PYTHON) -m isort *.py; \
 	$(PYTHON) -m black --target-version py36 $(MRLN); \
-	$(PYTHON) -m --target-version py36 $(TEST); \
-	$(PYTHON) -m --target-version py36 *.py; \
+	$(PYTHON) -m black --target-version py36 $(TEST); \
+	$(PYTHON) -m black --target-version py36 *.py; \
 
 
 # Increment the Merlin version. USE ONLY ON DEVELOP BEFORE MERGING TO MASTER.
