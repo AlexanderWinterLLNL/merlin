@@ -101,9 +101,9 @@ tests: unit-tests e2e-tests
 check-flake8:
 	. $(VENV)/bin/activate; \
 	echo "Flake8 linting for invalid source (bad syntax, undefined variables)..."; \
-	$(PYTHON) -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics; \
+	$(PYTHON) -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics; \
 	echo "Flake8 linting failure for CI..."; \
-	$(PYTHON) -m flake8 . --count --max-complexity=15 --statistics --max-line-length=127; \
+	$(PYTHON) -m flake8 . --count --statistics; \
 
 
 check-black:
@@ -139,13 +139,13 @@ checks: check-style check-camel-case
 
 # automatically make python files pep 8-compliant
 fix-style:
-	pip3 install -r requirements/dev.txt -U
-	isort -rc $(MRLN)
-	isort -rc $(TEST)
-	isort *.py
-	black --target-version py36 $(MRLN)
-	black --target-version py36 $(TEST)
-	black --target-version py36 *.py
+	. $(VENV)/bin/activate; \
+	$(PYTHON) -m isort $(MRLN); \
+	$(PYTHON) -m isort $(TEST); \
+	$(PYTHON) -m isort *.py; \
+	$(PYTHON) -m black --target-version py36 $(MRLN); \
+	$(PYTHON) -m black --target-version py36 $(TEST); \
+	$(PYTHON) -m black --target-version py36 *.py; \
 
 
 # Increment the Merlin version. USE ONLY ON DEVELOP BEFORE MERGING TO MASTER.
