@@ -1,0 +1,35 @@
+[project]
+name = "merlin"
+version = "1.8.1"
+description = "The building blocks of workflows!"
+authors = [
+    "Merlin Dev team",
+    "Ben Bay",
+    "Luc Peterson",
+    "Alexander Winter",
+    "Yamen Mubarka",
+    "Kasey Nagle"
+]
+author_email="merlin@llnl.gov"
+license = "MIT"
+readme = "README.md"
+python = "^3.6"
+repository = "https://github.com/MartinThoma/infer_pyproject"
+documentation = "https://github.com/MartinThoma/infer_pyproject"
+
+keywords = ["packaging", "dependency", "infer", "pyproject.toml"]
+
+classifiers = [
+    "Topic :: Software Development"
+]
+
+
+[tool.isort]
+profile = "black"
+line_length = 127
+known_first_party = merlin
+known_third_party = ['psutil', 'conduit', 'maestrowf', 'matplotlib', 'pandas', 'numpy>=1']
+lines_after_imports = 2
+
+[tool.black]
+target-version = ['py36', 'py37', 'py38', 'py39']
