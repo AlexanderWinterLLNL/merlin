@@ -103,23 +103,23 @@ tests: unit-tests e2e-tests
 check-flake8:
 	. $(VENV)/bin/activate; \
 	echo "Flake8 linting for invalid source (bad syntax, undefined variables)..."; \
-	$(PYTHON) -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics; \
+	$(PYTHON) -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics; \
 	echo "Flake8 linting failure for CI..."; \
-	$(PYTHON) -m flake8 . --count --max-complexity=15 --statistics --max-line-length=127; \
+	$(PYTHON) -m flake8 . --count --statistics; \
 
 
 check-black:
 	. $(VENV)/bin/activate; \
-	$(PYTHON) -m black --check --line-length $(MAX_LINE_LENGTH) --target-version py36 $(MRLN); \
-	$(PYTHON) -m black --check --line-length $(MAX_LINE_LENGTH) --target-version py36 $(TEST); \
-	$(PYTHON) -m black --check --line-length $(MAX_LINE_LENGTH) --target-version py36 *.py; \
+	$(PYTHON) -m black --check --target-version py36 $(MRLN); \
+	$(PYTHON) -m black --check --target-version py36 $(TEST); \
+	$(PYTHON) -m black --check --target-version py36 *.py; \
 
 
 check-isort:
 	. $(VENV)/bin/activate; \
-	$(PYTHON) -m isort --check --line-length $(MAX_LINE_LENGTH) merlin; \
-	$(PYTHON) -m isort --check --line-length $(MAX_LINE_LENGTH) tests; \
-	$(PYTHON) -m isort --check --line-length $(MAX_LINE_LENGTH) *.py; \
+	$(PYTHON) -m isort --check merlin; \
+	$(PYTHON) -m isort --check tests; \
+	$(PYTHON) -m isort --check *.py; \
 
 
 check-pylint:
@@ -151,12 +151,12 @@ checks: check-style check-camel-case
 # automatically make python files pep 8-compliant
 fix-style:
 	. $(VENV)/bin/activate; \
-	isort --line-length $(MAX_LINE_LENGTH) $(MRLN); \
-	isort --line-length $(MAX_LINE_LENGTH) $(TEST); \
-	isort --line-length $(MAX_LINE_LENGTH) *.py; \
-	black --target-version py36 -l $(MAX_LINE_LENGTH) $(MRLN); \
-	black --target-version py36 -l $(MAX_LINE_LENGTH) $(TEST); \
-	black --target-version py36 -l $(MAX_LINE_LENGTH) *.py; \
+	$(PYTHON) -m isort $(MRLN); \
+	$(PYTHON) -m isort $(TEST); \
+	$(PYTHON) -m isort *.py; \
+	$(PYTHON) -m black --target-version py36 $(MRLN); \
+	$(PYTHON) -m --target-version py36 $(TEST); \
+	$(PYTHON) -m --target-version py36 *.py; \
 
 
 # Increment the Merlin version. USE ONLY ON DEVELOP BEFORE MERGING TO MASTER.
